@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'data.dart';
+import 'homepage.dart';
 void main() {
   runApp(
      MaterialApp(
@@ -11,51 +12,43 @@ void main() {
 
 class MyApp extends StatelessWidget {
    MyApp({super.key});
-   String fullName = '';
+   ScheduleData scheduleData = ScheduleData();
+  late List<String> groups = scheduleData.getGroupsNames();
+  String? selectedGroup;
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Login page',
-        home: Scaffold(
-      appBar: AppBar(title: Text('Login page')),
-      body: Center(child: Column(children: <Widget>[
-        Container(
-            margin: const EdgeInsets.all(20),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Full Name',
-              ),
-              onChanged: (text) {
-                  fullName = text;
-              },
-            )),
-      Container(
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Page2(fullName : fullName)));
-            },
-            child: const Text('Login'),
-          )
-        ),],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.pink[300],
+        title: Text('Schedule'),
+        centerTitle: true,
       ),
-    )));
-  }
-}
-
-class Page2 extends StatelessWidget {
-  String fullName;
-  Page2({required this.fullName});
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Home page',
-      home: Scaffold(
-      appBar: AppBar(title: Text('Home page')),
       body: Center(
-        child: Text('Hello '+fullName,),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(15.0),
+              child: DropdownButton<String>(
+                value: selectedGroup,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: groups
+                    .map((group) =>
+                    DropdownMenuItem(
+                      value: group,
+                      child: Text(group),
+                    ))
+                    .toList(),
+                onChanged: (String? newGroup) {selectedGroup = newGroup;}
+              ),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home(selectedGroup : selectedGroup)));
+                },
+                child: Text('Продовжити'))
+          ],
+        ),
       ),
-    ),
     );
-  }
-}
+  }}
+
